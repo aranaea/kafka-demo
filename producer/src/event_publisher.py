@@ -1,8 +1,11 @@
 from kafka import KafkaProducer
 from kafka.errors import NoBrokersAvailable
 import json
+import os
 
-class Stream:
+topic = os.environ.get('PCDEMO_CHANNEL') or 'stats'
+
+class Publisher:
 
     def __init__(self, logger):
         self.logger = logger
@@ -11,10 +14,10 @@ class Stream:
         except NoBrokersAvailable as err:
             self.logger.error("Unable to find a broker: {0}".format(err))
 
-    def publish(self, message):
+    def push(self, message):
         self.logger.debug("Publishing: {0}".format(message))
         if self.producer:
-            self.producer.send('stats', json.dumps(message))
+            self.producer.send(topic, json.dumps(message))
 
 
 

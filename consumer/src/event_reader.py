@@ -8,7 +8,7 @@ topic = os.environ.get('PCDEMO_CHANNEL') or 'stats'
 class ConnectionException(Exception):
     pass
 
-class Stream():
+class Reader():
 
     def __init__(self, logger):
         self.logger = logger
@@ -18,7 +18,7 @@ class Stream():
         except NoBrokersAvailable as err:
             self.logger.error("Unable to find a broker: {0}".format(err))
 
-    def read_stream(self):
+    def next(self):
         self.logger.debug("Reading stream")
         if self.consumer:
             try:

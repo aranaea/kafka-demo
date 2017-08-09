@@ -1,10 +1,9 @@
 from flask import Flask, request
-from event_stream import Stream
+from event_reader import Reader, ConnectionException
 import json
-from event_stream import ConnectionException
 
 app = Flask(__name__)
-dispatcher = Stream(app.logger) #TODO: There's probably a better way to encapsulate logging
+reader = Reader(app.logger) #TODO: There's probably a better way to encapsulate logging
 
 @app.route("/")
 def index():
@@ -14,7 +13,7 @@ def index():
 def read_event():
     message = None
     try:
-        message = dispatcher.read_stream()
+        message = reader.next()
     except ConnectionException:
         return json.dumps({'status': 'connection_error', 'message': 'Unable to read from the message stream.'}), 500
 
