@@ -20,7 +20,7 @@ class TestProducerConsumer(unittest.TestCase):
             pass
 
     def send_event(self, event):
-        return requests.post(producer_url, json=json.dumps(event), headers={'Content-Type': 'application/json'})
+        return requests.post(producer_url, json=event, headers={'Content-Type': 'application/json'})
 
     #Just checks that we even have a connection.
     def test_post_an_event(self):
@@ -40,7 +40,7 @@ class TestProducerConsumer(unittest.TestCase):
         self.assertTrue(response.ok)
         response= requests.get(consumer_url)
         self.assertTrue(response.ok)
-        revent = json.loads(response.json())
+        revent = response.json()
         self.assertEqual(revent, event)
 
     def test_get_multiple_events(self):
@@ -56,7 +56,7 @@ class TestProducerConsumer(unittest.TestCase):
         for event in events:
             response = requests.get(consumer_url)
             self.assertTrue(response.ok)
-            revent = json.loads(response.json())
+            revent = response.json()
             self.assertEqual(revent, event)
 
     #Plain text should be rejected with a 400 Bad Request
