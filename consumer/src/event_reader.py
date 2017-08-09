@@ -23,8 +23,12 @@ class Reader():
                 self.logger.error("Unable to find a broker: {0}".format(err))
                 time.sleep(1)
 
-        self.logger.debug("We have a consumer")
+        self.logger.debug("We have a consumer {0}".format(time.time()))
         self.consumer.subscribe(topic)
+        # Wait for the topic creation and seek back to the beginning
+        self.consumer.poll(timeout_ms=10000)
+        self.consumer.seek(TopicPartition(topic, 0), 0)
+        self.logger.debug("ok {0}".format(time.time()))
 
     def next(self):
         self.logger.debug("Reading stream: {0}".format(topic))
