@@ -13,7 +13,7 @@ class Reader():
     def __init__(self, logger):
         self.logger = logger
         try:
-            self.consumer = KafkaConsumer(bootstrap_servers="kafka:9092", api_version=(0, 10), consumer_timeout_ms=100)
+            self.consumer = KafkaConsumer(bootstrap_servers="kafka:9092", api_version=(0, 10), consumer_timeout_ms=1000)
             self.consumer.subscribe(topic)
         except NoBrokersAvailable as err:
             self.logger.error("Unable to find a broker: {0}".format(err))
