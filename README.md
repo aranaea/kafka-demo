@@ -26,6 +26,12 @@ Python 2.7.13
 docker-compose version 1.15.0
 Docker version 17.05.0-ce
 
+You should also run:
+```bash
+pip install -r requirements.txt
+```
+is the `tester` directory to make sure you have the packages needed.
+
 ### Example Usage ###
 
 You'll always need to start it manually
