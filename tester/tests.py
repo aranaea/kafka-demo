@@ -3,16 +3,22 @@ import requests
 import json
 import os
 
-producer_host = os.environ.get('JBHH_PCDEMO_PHOST') or 'localhost'
-producer_port = os.environ.get('JBHH_PCDEMO_PPORT') or 8282
-consumer_host = os.environ.get('JBHH_PCDEMO_PHOST') or 'localhost'
-consumer_port = os.environ.get('JBHH_PCDEMO_PPORT') or 8283
+producer_host = os.environ.get('PCDEMO_PHOST') or 'localhost'
+producer_port = os.environ.get('PCDEMO_PPORT') or 8282
+consumer_host = os.environ.get('PCDEMO_PHOST') or 'localhost'
+consumer_port = os.environ.get('PCDEMO_PPORT') or 8283
 
 producer_url = "http://{0}:{1}/events".format(producer_host, producer_port)
 consumer_url = "http://{0}:{1}/events".format(consumer_host, consumer_port)
 
 # These aren't really unit tests but the unittest package seems like a convenient way to run integration tests, too
 class TestProducerConsumer(unittest.TestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        #Lame work around to make sure the
+        requests.post(producer_url, json={'one': 1}, headers={'Content-Type': 'application/json'})
+        requests.post(producer_url, json={'one': 2}, headers={'Content-Type': 'application/json'})
 
     # drain the message stream between tests
     def setUp(self):
@@ -38,16 +44,18 @@ class TestProducerConsumer(unittest.TestCase):
         event = {'name': 'test', 'payload': 'This is the best event'}
         response = self.send_event(event)
         self.assertTrue(response.ok)
-        response= requests.get(consumer_url)
+        response = requests.get(consumer_url)
         self.assertTrue(response.ok)
-        revent = response.json()
-        self.assertEqual(revent, event)
+        try:
+            self.assertEqual(response.json(), event)
+        except:
+            self.fail("Caught an exception reading the response. {0}".format(response.content))
 
     def test_get_multiple_events(self):
         events = [
-            {'name': 'test', 'payload': 'Potato Potato'},
-            {'name': 'test', 'payload': 'Hampered Scarlet'},
-            {'name': 'test', 'payload': 'twenty seven pennies'}]
+            {'name': 'test1', 'payload': 'Potato Potato'},
+            {'event': 'test2', 'message': 'Scarlet Wilcox'},
+            {'name': 'test3', 'payload': 'twenty-seven pennies'}]
 
         for event in events:
             response = self.send_event(event)
@@ -56,8 +64,10 @@ class TestProducerConsumer(unittest.TestCase):
         for event in events:
             response = requests.get(consumer_url)
             self.assertTrue(response.ok)
-            revent = response.json()
-            self.assertEqual(revent, event)
+            try:
+                self.assertEqual(response.json(), event)
+            except:
+                self.fail("Caught an exception reading the response. {0}".format(response.content))
 
     #Plain text should be rejected with a 400 Bad Request
     def test_send_plain_text(self):
