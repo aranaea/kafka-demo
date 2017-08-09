@@ -3,14 +3,17 @@ from kafka.errors import NoBrokersAvailable
 import json
 import os
 
-topic = 'stats' # os.environ['DEMO_CHANNEL'] or 'stats'
+topic = os.environ.get('PCDEMO_CHANNEL') or 'stats'
+
+class ConnectionException(Exception):
+    pass
 
 class Stream():
 
     def __init__(self, logger):
         self.logger = logger
         try:
-            self.consumer = KafkaConsumer(bootstrap_servers="kafka:9092", api_version=(0, 10), consumer_timeout_ms=10)
+            self.consumer = KafkaConsumer(bootstrap_servers="kafka:9092", api_version=(0, 10), consumer_timeout_ms=100)
             self.consumer.subscribe(topic)
         except NoBrokersAvailable as err:
             self.logger.error("Unable to find a broker: {0}".format(err))
@@ -22,8 +25,8 @@ class Stream():
                 event = self.consumer.next()
                 return json.loads(event.value)
             except StopIteration:
-                return { "status": "success", "message": "There are no events on the stream"} #TODO this should return an empty document
-        return None
+                return None
+        raise ConnectionException
 
 
 
