@@ -116,7 +116,11 @@ a conflict.
 
 *Make sure you run `docker-compose down` before switching to dev mode.*
 
-### Other things to worry about ###
+### Known Issues and Other things to worry about ###
+There currently seems to be a bug in the python kafka consumer. It may be related to 
+https://github.com/dpkp/kafka-python/issues/601 because I see the behavior described
+there when I try to `seek_to_beginning`.  Right now, the consumer can't read the first
+2 messages so the tests fail the first time but pass the second time they're run.
 
 This is just a quick demo of kafka's pub sub using Python.  It's missing _a lot_ of 
 stuff you would want if you were going to use this in a production environment.  Including:
