@@ -39,6 +39,30 @@ You'll always need to start it manually
 ```bash
 docker-compose up
 ```
+
+It'll take a few seconds to come up.  Usually the producer and consumer
+seem to start before kafka is ready and there's a point where it looks 
+like it's good to go, but it's not.
+
+```
+consumer_1   | Running app in debug mode!
+consumer_1   |  * Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
+consumer_1   |  * Restarting with stat
+producer_1   |  * Running on http://0.0.0.0:80/ (Press CTRL+C to quit)
+producer_1   |  * Restarting with stat
+consumer_1   |  * Debugger is active!
+consumer_1   |  * Debugger PIN: 325-703-385
+producer_1   |  * Debugger is active!
+producer_1   |  * Debugger PIN: 111-020-208
+```
+
+You shoud wait a few more seconds until you see this message in the 
+console:
+
+```
+kafka_1      | creating topics: stats:1:1
+```
+
 #### Manual Testing ####
 In another terminal you can then run:
 ```bash
@@ -83,6 +107,15 @@ advertised hostname of 'kafka'.  To fix this just add an entry to your `/etc/hos
 127.0.0.1       localhost kafka
 ```
 
+### Dev Mode ###
+
+A quick note about starting with the `docker-compose.dev.yml` file.  This one will
+mount the local directories to the containers to make dev easier, but if you've
+already started the containers with the `docker-compose.yml` file there will be
+a conflict.  
+
+*Make sure you run `docker-compose down` before switching to dev mode.*
+
 ### Other things to worry about ###
 
 This is just a quick demo of kafka's pub sub using Python.  It's missing _a lot_ of 
@@ -91,4 +124,6 @@ stuff you would want if you were going to use this in a production environment. 
 * authentication and authorization
 * improved error handling
 * connection retries for kafka brokers
+* managing partitions
 * probably other things
+
