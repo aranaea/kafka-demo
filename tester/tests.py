@@ -14,16 +14,16 @@ consumer_url = "http://{0}:{1}/events".format(consumer_host, consumer_port)
 # These aren't really unit tests but the unittest package seems like a convenient way to run integration tests, too
 class TestProducerConsumer(unittest.TestCase):
 
+    # drain the message stream between tests
     def setUp(self):
-        #drain the queue
         while requests.get(consumer_url).status_code == 200:
             pass
 
     def send_event(self, event):
         return requests.post(producer_url, json=json.dumps(event), headers={'Content-Type': 'application/json'})
 
+    #Just checks that we even have a connection.
     def test_post_an_event(self):
-        #Just checks that we even have a connection.
         event = {'name': 'test', 'payload': 'rock and also roll'}
         response = self.send_event(event);
         self.assertTrue(response.ok)
@@ -59,7 +59,10 @@ class TestProducerConsumer(unittest.TestCase):
             revent = json.loads(response.json())
             self.assertEqual(revent, event)
 
-
+    #Plain text should be rejected with a 400 Bad Request
+    def test_send_plain_text(self):
+        response = requests.post(producer_url, data="hello world", headers={'Content-Type': 'application/json'})
+        self.assertEqual(response.status_code, 400)
 
 if __name__ == '__main__':
     unittest.main()
