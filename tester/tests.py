@@ -14,12 +14,6 @@ consumer_url = "http://{0}:{1}/events".format(consumer_host, consumer_port)
 # These aren't really unit tests but the unittest package seems like a convenient way to run integration tests, too
 class TestProducerConsumer(unittest.TestCase):
 
-    @classmethod
-    def setUpClass(cls):
-        #Lame work around to make sure the
-        requests.post(producer_url, json={'one': 1}, headers={'Content-Type': 'application/json'})
-        requests.post(producer_url, json={'one': 2}, headers={'Content-Type': 'application/json'})
-
     # drain the message stream between tests
     def setUp(self):
         while requests.get(consumer_url).status_code == 200:
