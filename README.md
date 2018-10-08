@@ -8,7 +8,8 @@ you'll find a small handful of goodies.
   with just `docker-compose up`
 * `docker-compose.dev.yml`
   * The same as `docker-compose.yml` except that it mounts the producer and 
-  consumer src directories to make the dev/test cycle easier.
+  consumer src directories to make the dev/test cycle easier.  You can start it with 
+  `docker-compose -f docker-compose.dev.yml up`
 * producer
   * The source and `Dockerfile` for the producer application.
 * consumer
