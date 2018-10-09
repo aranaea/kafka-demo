@@ -3,13 +3,17 @@ from kafka.errors import NoBrokersAvailable
 import json
 import os
 import time
+import logging
 
 topic = os.environ.get('PCDEMO_CHANNEL') or 'stats'
 
 class Publisher:
 
-    def __init__(self, logger):
+    def __init__(self):
+        logger = logging.getLogger()
+        logger.setLevel(logging.DEBUG)
         self.logger = logger
+
         while not hasattr(self, 'producer'):
             try:
                 self.producer = KafkaProducer(bootstrap_servers="kafka:9092")

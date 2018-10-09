@@ -1,13 +1,20 @@
 from flask import Flask, request
 from event_reader import Reader, ConnectionException
+import logging
 import json
 
+
 app = Flask(__name__)
-reader = Reader(app.logger) #TODO: There's probably a better way to encapsulate logging
+reader = Reader()
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+if len(logger.handlers) == 0:
+    logger.addHandler(logging.StreamHandler())
 
 @app.route("/")
 def index():
-    return "This is the event generator.  To read an event from the stream issue a GET on the /events endpoint."
+    return "This is the Event reader.  To read an event from the stream issue a GET on the /events endpoint."
 
 @app.route("/events", methods=['GET'])
 def read_event():

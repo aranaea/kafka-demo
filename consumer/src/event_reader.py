@@ -1,5 +1,6 @@
 from kafka import KafkaConsumer, TopicPartition
 from kafka.errors import NoBrokersAvailable
+import logging
 import json
 import os
 import time
@@ -11,8 +12,8 @@ class ConnectionException(Exception):
 
 class Reader():
 
-    def __init__(self, logger):
-        self.logger = logger
+    def __init__(self):
+        self.logger = logging.getLogger()
         self.logger.debug("Initializing the consumer")
         while not hasattr(self, 'consumer'):
             self.logger.debug("Getting the kafka consumer")

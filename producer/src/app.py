@@ -1,18 +1,25 @@
 from flask import Flask, request
 from event_publisher import Publisher
+import logging
 import json
 
+
 app = Flask(__name__)
-dispatcher = Publisher(app.logger) #TODO: There's probably a better way to encapsulate logging
+dispatcher = Publisher()
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+if len(logger.handlers) == 0:
+    logger.addHandler(logging.StreamHandler())
 
 @app.route("/")
 def index():
-    return "This is the event generator.  To send an event to the stats processor POST to the /events endpoint."
+    return "This is the Event generator.  To send an event to the stats processor POST to the /events endpoint."
 
 @app.route("/events", methods=['POST'])
 def post_event():
     message = request.get_json()
-    app.logger.debug("request had the following data: {0}".format(message))
+    logger.debug("request had the following data: {0}".format(message))
     dispatcher.push(message)
     return json.dumps({'status': 'success'}), 200
 
