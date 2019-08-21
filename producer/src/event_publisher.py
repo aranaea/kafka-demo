@@ -7,6 +7,7 @@ import logging
 
 topic = os.environ.get('PCDEMO_CHANNEL') or 'stats'
 
+
 class Publisher:
 
     def __init__(self):
