@@ -15,14 +15,14 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
 
   producer:
-    image: peterc/jbhh-producer-example:latest
+    image: peterc/kafka-flask-producer-example:latest
     build:
       context: ./producer
     ports:
       - "8282:80"
 
   consumer:
-    image: peterc/jbhh-consumer-example:latest
+    image: peterc/kafka-flask-consumer-example:latest
     build:
       context: ./consumer
     ports:

@@ -1,7 +1,13 @@
 ## Kafka Demo ##
+_Notes_ 2019-08-21: Updated for Python 3.7 and kafka-python 1.4.6
+ 
+This repo was written as part of a job interview and isn't necessarily a good
+example of a production Kafka use case.  The requirements imposed by the
+interviewer and the limited time I had to spend on it meant that this was
+stripped down to something very limited.  But it is a useful reference point
+and contains a decent demo of Kafka's pub/sub capabilities.
 
-This repo contains a pretty simple demo of Kafka's pub/sub capabilities.  Inside
-you'll find a small handful of goodies.
+Inside you'll find a small handful of goodies.
 
 * `docker-compose.yml`
   * This is the base composition.  It should allow you to bring up the stack 
@@ -23,15 +29,16 @@ you'll find a small handful of goodies.
 ### Dependencies ###
 Other versions may work but this build has been tested with the following:
 
-Python 2.7.13
-docker-compose version 1.15.0
-Docker version 17.05.0-ce
+Python 3.7.x
+docker-compose version 1.25.0-rc1
+Docker version 19.03.1
 
 You should also run:
 ```bash
 pip install -r requirements.txt
 ```
-is the `tester` directory to make sure you have the packages needed.
+in the `tester` directory to make sure you have the packages needed if you
+plan to run the test scripts.
 
 ### Example Usage ###
 
@@ -81,7 +88,8 @@ curl localhost:8283/events
 
 #### Scripted Testing ####
 
-After starting the stack wich `docker-compose` go into the `tester` directory and run:
+After starting the stack with `docker-compose` go into the `tester
+` directory and run:
 
 ```bash
 python tests.py
@@ -118,10 +126,6 @@ a conflict.
 *Make sure you run `docker-compose down` before switching to dev mode.*
 
 ### Known Issues and Other things to worry about ###
-There currently seems to be a bug in the python kafka consumer. It may be related to 
-https://github.com/dpkp/kafka-python/issues/601 because I see the behavior described
-there when I try to `seek_to_beginning`.  Right now, the consumer can't read the first
-2 messages so the tests fail the first time but pass the second time they're run.
 
 This is just a quick demo of kafka's pub sub using Python.  It's missing _a lot_ of 
 stuff you would want if you were going to use this in a production environment.  Including:

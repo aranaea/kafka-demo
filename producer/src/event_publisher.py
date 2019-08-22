@@ -26,6 +26,8 @@ class Publisher:
         self.logger.debug("Publishing: {0}".format(message))
         try:
             if self.producer:
-                self.producer.send(topic, json.dumps(message))
+                self.producer.send(topic,
+                                   bytes(json.dumps(message).encode('utf-8')))
         except AttributeError:
-            self.logger.error("Unable to send {0}. The producer does not exist.".format(message))
+            self.logger.error("Unable to send {0}. The producer does not exist."
+                              .format(message))
